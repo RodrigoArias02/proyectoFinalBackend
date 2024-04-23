@@ -56,7 +56,7 @@ export class ProductsControllers {
         nextPage,
       } = productos;
 
-      res.status(200).render("home", {
+      return res.status(200).render("home", {
         playload,
         hasNextPage,
         hasPrevPage,
@@ -109,7 +109,7 @@ export class ProductsControllers {
       }
     
 
-      res
+      return res
         .status(200)
         .render("realTimesProducts", {
           productos: playload,
@@ -154,7 +154,7 @@ export class ProductsControllers {
 
       let { totalPages, hasPrevPage, hasNextPage, prevPage, nextPage } =
         productos.elements;
-      res.status(200).render("productos", {
+        return res.status(200).render("productos", {
         productos: productos.elements.docs,
         hasNextPage,
         hasPrevPage,

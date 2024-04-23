@@ -10,7 +10,7 @@ export class SessionControllers {
     const login = req.session.usuario
     const { user, error } = req.query;
 
-    res.status(200).render("login", { user, error, login });
+    return res.status(200).render("login", { user, error, login });
   }
 
   static async renderRegisterUser(req, res) {
@@ -18,7 +18,7 @@ export class SessionControllers {
     const login = req.session.usuario 
     const { error } = req.query;
 
-    res.status(200).render("register", { error, login });
+    return res.status(200).render("register", { error, login });
   }
 
   //autenticacion normal

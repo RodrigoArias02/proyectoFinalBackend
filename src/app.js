@@ -32,9 +32,6 @@ const options={
   apis:["./docs/*yaml"]
 }
 
-const specs=swaggerJSDoc(options)
-// Configuración del motor de vistas
-
 app.engine(
   "handlebars",
   engine({
@@ -44,6 +41,15 @@ app.engine(
     },
   })
 );
+console.log(__dirname)
+app.set('view engine', 'handlebars');
+
+app.set('views', join(__dirname,'views'));
+
+const specs=swaggerJSDoc(options)
+// Configuración del motor de vistas
+
+
 
 app.use(
   session({
@@ -58,8 +64,6 @@ app.use(
   })
 );
 
-app.set("view engine", "handlebars");
-app.set("views", join(__dirname, "views"));
 // Middleware
 app.use(middlog)
 app.use("/api-docs", SwaggerUi.serve, SwaggerUi.setup(specs))

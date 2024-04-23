@@ -19,7 +19,7 @@ export class UsersControllers {
 
 
     const usersCadena=JSON.stringify(users);
-    res.status(200).render("adminUsers", { users, usersCadena });
+    return res.status(200).render("adminUsers", { users, usersCadena });
   }
   static async uploadDocuments(req, res, next) {
     res.setHeader("Content-Type", "application/json");

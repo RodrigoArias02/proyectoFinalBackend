@@ -1,5 +1,6 @@
 export const errorHandler = (error, req, res, next) => {
 
+  console.log(error)
   if (error) {
     if (error.codigo) {
       req.logger.error(  `(Error codigo ${error.codigoInterno}) - ${error.name}: ${error.message}. Detalle: ${error.descripcion}`

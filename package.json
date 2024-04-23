@@ -1,15 +1,21 @@
 {
-  "name": "preentrega",
+  "name": "proyectofinalecommerce-main",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
+  "description": "ecommerce",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },  
+  "type": "module", 
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RodrigoArias02/proyectoFinalBackend.git"
+  },
+  "author": "Rodrigo",
   "license": "ISC",
   "dependencies": {
     "@nestjs/cli": "^10.3.2",
@@ -38,8 +44,12 @@
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
     "chai": "^5.1.0",
-    "mocha": "^10.3.0",
+    "mocha": "^10.4.0",
     "nodemon": "^3.1.0",
     "supertest": "^6.3.4"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/RodrigoArias02/proyectoFinalBackend/issues"
+  },
+  "homepage": "https://github.com/RodrigoArias02/proyectoFinalBackend#readme"
 }

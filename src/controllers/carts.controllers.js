@@ -23,7 +23,7 @@ export class CartsControllers {
     let render = new RenderCart(objectAmount, carrito);
 
     if (status == 200) {
-      res.status(200).render("cart", { render, login });
+      return res.status(200).render("cart", { render, login });
     } else if (status == 400) {
       return res.status(400).json({ error: "No se encontro el id" });
     } else {

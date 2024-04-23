@@ -24,7 +24,7 @@ if (configVar.ENTORNO === 'production') {
         levels: levels,
         transports: [
             new winston.transports.File({
-                filename: 'utilsErrors/errors.log',
+                filename: 'C:/Users/ludmi/Desktop/ProyectoFinalEcommerce-main/src/utilsErrors/errors.log',
                 level: 'warning',
                 format: winston.format.combine(
                     winston.format.timestamp(),

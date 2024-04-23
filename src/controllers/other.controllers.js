@@ -19,10 +19,10 @@ export class OthersControllers {
       // Formatear la hora de cada mensaje antes de pasarlos a la plantilla
       messages = formatearHora(messages);
       res.setHeader("Content-Type", "text/html");
-      res.status(200).render("chat", { messages,login });
+      return res.status(200).render("chat", { messages,login });
     } catch (error) {
       console.error("Error al cargar el chat:", error);
-      res.status(500).send("Error interno del servidor");
+      return res.status(500).send("Error interno del servidor");
     }
   }
 
@@ -31,7 +31,7 @@ export class OthersControllers {
     const { error } = req.query;
     const login = req.session.usuario;
 
-    res.status(200).render("perfil", {login, error });
+    return res.status(200).render("perfil", {login, error });
   }
 
   static async postChatSendMessage(req, res) {
@@ -85,7 +85,7 @@ export class OthersControllers {
     try {
       let {message,error}=req.query
 
-      res.status(200).render("mail/recuperoEmail01",{message,error});
+      return res.status(200).render("mail/recuperoEmail01",{message,error});
     } catch (error) {
       return res
         .status(500)
@@ -100,7 +100,7 @@ export class OthersControllers {
       if(!token){
         return res.status(400).json({ error: "Token invalido" });
       }
-      res.status(200).render("mail/recoverEmail02",{token,error});
+      return res.status(200).render("mail/recoverEmail02",{token,error});
     } catch (error) {
       return res.status(500).json({ error: "Ha ocurrido un error en el servidor" });
     }

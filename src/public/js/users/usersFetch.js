@@ -1,7 +1,7 @@
 const btnEliminarUsuario = document.getElementById("botonEliminar")
 const btnActualizarRol = document.getElementById("actualizarRol")
 const selectUsuario = document.getElementById('usuarioSelec');
-const inputRol = document.getElementById('rol');
+
 let usuarios = document.getElementById('usuarios').value;
 usuarios = JSON.parse(usuarios);
 
@@ -75,9 +75,7 @@ selectUsuario.addEventListener('change', function () {
         let rolUsuario = usuarioEncontrado.rol;
         rolUsuario = (rolUsuario === 'usuario') ? 'premium' : 'usuario';
         btnActualizarRol.innerText = `actualizar rol a ${rolUsuario}`
-    } else {
-        inputRol.value = "";
-    }
+    } 
 
 });
 

@@ -1,0 +1,17 @@
+<h2>Administrador</h2>
+<div id="productContainer">
+          <input type="text" id="usuarios" hidden value={{usersCadena}}>
+    <select name="" id="usuarioSelec">
+        <option value="">elija un email</option>
+    {{#each users}}
+      <option value={{this.email}}>{{this.email}} </option>
+    {{/each}}
+    </select>
+    <input type="text" id="rol">
+    <button id="botonEliminar">Eliminar usuario</button>
+    <button id="actualizarRol">Actualizar rol</button>
+</div>
+
+
+<script src="js/users/usersFetch.js"></script>
+

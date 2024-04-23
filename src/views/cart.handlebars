@@ -1,0 +1,35 @@
+<a href="/">Volver</a>
+<p id="cartId" hidden >{{render.idCarrito}}</p>
+<h2>Id carrito: {{render.idCarrito}}</h2>
+<h3>total: ${{render.total}} </h3>
+
+<button id="btnVaciarCarrito">Vaciar carrito</button>
+<button id="comprarCarrito" >comprar</button>
+<div id="productContainer">
+  {{#each render.productos}}
+    <div>
+      {{#if this.idProducto}}
+        <p><b>Titulo: </b>{{this.idProducto.title}}</p>
+        <p><b>cantidad: </b>{{this.quantity}}</p>
+        <p>precio: ${{this.idProducto.price}}</p>
+        <p><b>Descripcion: </b>{{this.idProducto.description}}</p>
+
+        <img src={{this.idProducto.thumbnail}} width="200" />
+      {{else}}
+        <p><b>El producto ah sido retirado de la tienda</b></p>
+      {{/if}}
+      <button
+        data-id="{{this.idProducto._id}}"
+        data-otro-id="{{this.quantity}}"
+        class="eliminarUno"
+      >Eliminar</button>
+
+      <button data-id-todo="{{this.idProducto._id}}" class="eliminarTodo">Eliminar todo</button>
+
+    </div>
+    <hr />
+  {{/each}}
+
+
+</div>
+<script src="../js/deleteProductCart.js"></script>

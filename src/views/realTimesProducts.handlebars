@@ -1,0 +1,79 @@
+<h1>Productos con WebSocket</h1>
+<a href="/"><h3>Volver al inicio</h3></a>
+<h2>Ingresar nuevo producto</h2>
+<form id="miFormulario" action="/api/products" method="post">
+  <input type="text" name="title" placeholder="Titulo" />
+  <input type="text" name="description" placeholder="Descripcion" />
+  <input type="number" name="code" placeholder="code" />
+  <input type="number" name="price" placeholder="price" />
+  <input type="email" name="owner" value="{{email}}" />
+  <select name="status" id="">
+    <option value="true">true</option>
+    <option value="false">false</option>
+  </select>
+  <input type="number" name="stock" placeholder="stock" />
+  <select name="category" id="">
+    <option value="Comida">Comida</option>
+    <option value="Electrodomesticos">Electrodomesticos</option>
+  </select>
+  <input type="text" name="thumbnail" placeholder="UrlImagenPrueba" />
+  <input type="submit" value="enviar" />
+
+</form>
+<form action="">
+  <h2>Eliminar elemento</h2>
+  {{#if error}}
+    <div style="color: red;"> {{error}} </div>
+  {{/if}}
+  <input type="text" name="id"  placeholder="Id" />
+  <button type="button" id="enviarId">Enviar</button>
+</form>
+
+<h3>Productos</h3>
+
+<div id="productContainer">
+  {{#each productos}}
+    <div>
+      <p><b>id:</b>{{this._id}}</p>
+      <br />
+      <b>Titulo: </b><input type="text" name="title" value="{{this.title}}" />
+      <br />
+      <b>Precio: </b><input type="number" name="price" value="{{this.price}}" />
+      <br />
+      <b>Code</b><input type="number" name="code" value="{{this.code}}" />
+      <br />
+      <b>Descripcion: </b><textarea
+        name="description"
+      >{{this.description}}</textarea>
+      <br />
+      <b>Stock: </b><input type="number" name="stock" value="{{this.stock}}" />
+      <br />
+      <b>Categoria: </b>
+      <input type="text" name="category" value="{{this.category}}" />
+      <br />
+      <b>email: </b><input type="email" name="owner" value="{{this.owner}}" />
+      <br />
+      <b>Imagen:</b>
+      <input type="text" name="thumbnail" value="{{this.thumbnail}}" />
+
+      <button data-id="{{this._id}}" class="btnUpdate">Actualizar producto</button>
+    </div>
+    <hr />
+  {{/each}}
+</div>
+<a href="?pagina=1">1.Pag</a>
+{{#if hasPrevPage}}
+  <a href="?pagina={{prevPage}}">pagina anterior</a>
+{{else}}
+  <span>pagina anterior</span>
+{{/if}}
+{{#if hasNextPage}}
+  <a href="?pagina={{nextPage}}">pagina siguiente</a>
+{{else}}
+  <span>pagina siguiente</span>
+{{/if}}
+<a href="?pagina={{totalPages}}">ultima pagina</a>
+
+<script src="socket.io/socket.io.js"></script>
+<script src="js/getProducts.js"></script>
+<script type="module" src="js/productUpdate.js"></script>

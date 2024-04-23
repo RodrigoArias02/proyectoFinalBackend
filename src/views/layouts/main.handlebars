@@ -1,0 +1,21 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/chat.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <a href="/">Home</a>
+    {{#if login}}
+      <a href="/perfil">Perfil</a>
+      <a href="/api/sessions/logout">Logout</a>
+      <a href="carts/{{login.carrito}}">Cart</a>
+    {{else}}
+      <a href="/login">Login</a>
+      <a href="/registro">Registro</a>
+    {{/if}}
+
+    {{{body}}}
+  </body>
+</html>

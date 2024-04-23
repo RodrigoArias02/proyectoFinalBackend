@@ -1,0 +1,13 @@
+<form action="/api/sessions/registro" method="post">
+  {{#if error}}
+    <div style="color: red;"> {{error}} </div>
+  {{/if}}
+  <input type="text" name="first_name" placeholder="Nombre" />
+  <input type="text" name="last_name" placeholder="Apellido" />
+  <input type="number" name="age" placeholder="Edad" />
+  <input type="email" name="email" placeholder="email" />
+  <input type="password" name="password" placeholder="Contraseña" />
+  <input type="text" name="rol" placeholder="Rol" />
+
+  <input type="submit" value="enviar" />
+</form>

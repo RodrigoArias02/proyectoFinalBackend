@@ -4,6 +4,7 @@ import { join } from 'path'; // Importa la función join del módulo path
 
 const rutaConfig = join(__dirname,'.env');
 
+
 dotenv.config(
     {
         path: rutaConfig

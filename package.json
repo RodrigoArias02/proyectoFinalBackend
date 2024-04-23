@@ -5,11 +5,12 @@
   "main": "app.js",
   "directories": {
     "test": "test"
-  },  
-  "type": "module", 
+  },
+  "type": "module",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon src/app.js",
+    "test": "mocha --exit"
   },
   "repository": {
     "type": "git",

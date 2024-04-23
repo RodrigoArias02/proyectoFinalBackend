@@ -76,11 +76,12 @@ botonComprarCarrito.addEventListener("click", async () => {
 
     const data = await response.json();
 
- 
+
     if (data.status == "200") {
+      alert("compra exitosa")
       window.location.reload(); // Recargar la página
     } else {
-      alert(data.error);
+      alert(`Algo salio mal: ${data.error}, status: ${data.status}`);
     }
   } catch (error) {
     console.error("Error al enviar el formulario:", error);

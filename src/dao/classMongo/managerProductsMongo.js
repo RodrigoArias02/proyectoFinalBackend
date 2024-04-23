@@ -27,12 +27,10 @@ export class ManagerProductsMongoDB {
     try {
       // Agregar etapa de filtración por categoría solo si se proporciona una categoría
       if (category) {
-   
         aggregatePipeline.push({
           $match: { category: { $in: [category] } },
         });
       } else if (owner) {
-      
         aggregatePipeline.push({
           $match: { owner: { $in: [owner] } },
         });
@@ -57,10 +55,10 @@ export class ManagerProductsMongoDB {
           $limit: PAGE_SIZE,
         }
       );
-     
+
       // Consulta para obtener productos
       let prodCat = await ProductoModelo.aggregate(aggregatePipeline);
-   
+
       // Consulta para obtener el total de productos
       const totalProducts = await (category
         ? ProductoModelo.countDocuments({ category: { $in: [category] } })
@@ -99,7 +97,6 @@ export class ManagerProductsMongoDB {
       let nuevoProducto = ProductoModelo.create(product);
       return nuevoProducto;
     } catch (error) {
-      console.error("Error al añadir el producto:", error);
       return {
         status: 400,
         messageError: "Error al añadir el producto a la BD",
@@ -115,8 +112,7 @@ export class ManagerProductsMongoDB {
 
       return productoEncontrado;
     } catch (error) {
-      console.error("Algo salio mal en la busqueda:", error);
-      return { status: 400, error: "Algo salio mal en la busqueda" };
+      return error;
     }
   }
 
@@ -128,7 +124,6 @@ export class ManagerProductsMongoDB {
       );
       return result;
     } catch (error) {
-      console.error("Error al actualizar el documento:", error);
       return {
         status: 500,
         error: `Error al actualizar el documento: ${error}`,
@@ -141,7 +136,6 @@ export class ManagerProductsMongoDB {
       const result = await ProductoModelo.deleteOne({ _id: id });
       return result;
     } catch (error) {
-      console.error("Error al eliminar el producto:", error);
       return {
         status: 500,
         message: "Error interno al intentar eliminar el producto.",

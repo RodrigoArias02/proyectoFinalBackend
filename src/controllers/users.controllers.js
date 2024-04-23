@@ -6,6 +6,11 @@ export class UsersControllers {
   static async adminUser(req, res) {
     res.setHeader("Content-Type", "text/html");
     const email = req.session.usuario.email
+    const login = req.session.usuario
+    let validarAdmin
+    if(login){
+       validarAdmin=login.rol=="admin"?true:false
+    }
     let users = await UserServices.getUsersService()
     users = users.playload
     users = users.filter(user => user.email !== email);
@@ -19,7 +24,7 @@ export class UsersControllers {
 
 
     const usersCadena=JSON.stringify(users);
-    return res.status(200).render("adminUsers", { users, usersCadena });
+    return res.status(200).render("adminUsers", { users, usersCadena, login, validarAdmin});
   }
   static async uploadDocuments(req, res, next) {
     res.setHeader("Content-Type", "application/json");

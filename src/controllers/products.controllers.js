@@ -15,8 +15,15 @@ export class ProductsControllers {
     let categoria;
     let productos;
     let direccion;
+    let validarAdmin=false;
     let pagina;
     let login = req.session.usuario
+  
+    if(login){
+       validarAdmin=login.rol=="admin"?true:false
+    }
+    
+
     if (req.query.category) {
       categoria = req.query.category;
     }
@@ -67,6 +74,7 @@ export class ProductsControllers {
         direccion,
         pagina,
         login,
+        validarAdmin,
       });
     } catch (error) {
       next(error);
@@ -77,7 +85,10 @@ export class ProductsControllers {
     res.setHeader("Content-Type", "text/html");
     let login = req.session.usuario
     let email = req.session.usuario.email;
-    
+    let validarAdmin
+    if(login){
+       validarAdmin=login.rol=="admin"?true:false
+    }
 
     let pagina=1
     if (req.query.pagina) {
@@ -121,6 +132,7 @@ export class ProductsControllers {
           prevPage,
           nextPage,
           totalPages,
+          validarAdmin
         });
     } catch (error) {
       next(error);
@@ -131,6 +143,10 @@ export class ProductsControllers {
     res.setHeader("Content-Type", "text/html");
     let pagina = 1;
     const login = req.session.usuario 
+    let validarAdmin
+    if(login){
+       validarAdmin=login.rol=="admin"?true:false
+    }
     const esUsuario = login.rol === "usuario" ? true : false;
     
     if (req.query.pagina) {
@@ -163,6 +179,7 @@ export class ProductsControllers {
         totalPages,
         esUsuario,
         login,
+        validarAdmin
       });
     } catch (error) {
       next(error);
@@ -232,7 +249,10 @@ export class ProductsControllers {
       res.setHeader("Content-Type", "application/json");
       let usuario=req.session.usuario
       let product=req.body
+    
+    
       if (!req.isAuthenticated()) {
+    
         throw CustomError.createError(
           "Usuario no encontrado",
           "No se ha iniciado sesión. Debes iniciar sesión para realizar esta acción.",
@@ -245,6 +265,7 @@ export class ProductsControllers {
       const valido = validateProperties(product);
 
       if (!valido) {
+ 
         throw CustomError.createError(
           "Error en propiedades",
           "Propiedades inválidas",
@@ -254,9 +275,11 @@ export class ProductsControllers {
         );
       }
       product = new ProductRead(product);
+      
       const OK = validTypeData(product);
 
       if (OK != null) {
+
         throw CustomError.createError(
           "Error en tipo de datos",
           "El tipo de datos de algunos de los campos no es admitido",
@@ -267,6 +290,7 @@ export class ProductsControllers {
       }
 
       if(usuario.rol !== "premium" && usuario.rol !== "admin"){
+      
         throw CustomError.createError(
             "Permisos insuficientes",
             "No tienes permisos suficientes para subir un producto.",
@@ -278,6 +302,7 @@ export class ProductsControllers {
       const estado = await ProductServices.ingresarProductosService(product);
 
       if (estado.status != 201) {
+       
         throw CustomError.createError(
           "Error al realizar la peticion",
           estado.messageError,
@@ -287,9 +312,10 @@ export class ProductsControllers {
         );
       }
 
-      return res.redirect(`${configVar.URL}/ingresarProductos`); //produccion
+    
+      return res.redirect(`${configVar.URL}/ingresarProductos`); 
     } catch (error) {
-      // Pasar el error al siguiente middleware (errorHandler)
+   
       next(error);
     }
     next();
@@ -340,11 +366,12 @@ export class ProductsControllers {
 
   static async deleteProduct(req, res, next) {
     try {
+     
       res.setHeader("Content-Type", "application/json");
       const usuario = req.session.usuario;
       let { pid } = req.params;
       let pagina=1
-    
+     
       const idValido = mongoose.Types.ObjectId.isValid(pid);
       if (!idValido) {
         throw CustomError.createError(
@@ -355,6 +382,7 @@ export class ProductsControllers {
           errorId(idValido, pid)
         );
       }
+
       const { producto } = await ProductServices.ProductoIdService(pid);
       if (usuario.rol=="usuario") {
         return res.status(403).json({status:403,error:"permisos insuficientes", ruta:configVar.URL} );   
@@ -362,33 +390,39 @@ export class ProductsControllers {
         if (usuario.rol=="premium" && producto.owner != usuario.email) {
           return res.status(403).json({status:403,error:"permisos insuficientes", ruta:configVar.URL} );   
         }
-        
+  
       const usuarioDelProducto=producto.owner
       const {status,playload,error}= await UserServices.getByEmail(usuarioDelProducto)
 
-      if(status!=200){
-        return {status, error}
+      if(status!==200){
+        return res.status(status).json(status,error);
+      }
+    
+      if (!playload) {
+        return res.status(500).json({ error });
+      }
+      if(status==200){
+        if(playload.rol=="premium"){
+          const msg=`Se ah dado de baja el producto <b>${producto.title}</b>, con el siguiente id: ${producto._id}`
+          const estadoEnviarEmail= await submitEmail(usuarioDelProducto, "Se elimino un producto", msg)
+      
+        }
+     
+        const resultado = await ProductServices.deleteProductService(pid);
+        
+        if(resultado.status!=201){
+          return res.status(resultado.status).json(resultado);
+        }
+        const productos = await ProductServices.listProductsAggregateService(null,pagina,null,usuario.email);
+  
+        if(productos.status!=200){
+          return res.status(productos.status,).json(productos);
+        }
+  
+        io.emit("eliminado", productos.playload);
+        return res.status(resultado.status).json(resultado);
       }
      
-      if(playload.rol=="premium"){
-        const msg=`Se ah dado de baja el producto <b>${producto.title}</b>, con el siguiente id: ${producto._id}`
-        const estadoEnviarEmail= await submitEmail(usuarioDelProducto, "Se elimino un producto", msg)
-    
-      }
-   
-      const resultado = await ProductServices.deleteProductService(pid);
-      
-      const productos = await ProductServices.listProductsAggregateService(null,pagina,null,usuario.email);
-
-    
-  
-      if(productos.status!=200){
-        return {status:productos.status, error:"algo salio mal al renderizar"}
-      }
-
-      //emitimos el array sin el producto eliminado
-      io.emit("eliminado", productos.playload);
-      return res.status(resultado.status).json(resultado);
     } catch (error) {
       next(error);
     }

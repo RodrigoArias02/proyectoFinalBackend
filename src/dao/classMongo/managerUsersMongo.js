@@ -6,8 +6,7 @@ export class ManagerUsersMongoDB {
       let usuario = await UserModelo.create(usuarios);
       return usuario;
     } catch (error) {
-      console.error("Error al listar productos:", error);
-      return null;
+      return error;
     }
   }
   async getUsers(){
@@ -21,9 +20,10 @@ export class ManagerUsersMongoDB {
   async searchUserEmail(email){
     try {
         const existe = await UserModelo.findOne({ email }).lean();
-        return {status:200, playload:existe}
+
+        return {playload:existe}
     } catch (error) {
-        return {status:500, error}
+        return error
     }
   }
 
@@ -67,7 +67,7 @@ export class ManagerUsersMongoDB {
         };
       }
     } catch (error) {
-      console.error("Error al listar productos:", error);
+
       return null;
     }
   }
@@ -79,8 +79,8 @@ export class ManagerUsersMongoDB {
       );
         return result
     } catch (error) {
-      console.error("Error al listar productos:", error);
-      return null;
+  
+      return error;
     }
   }
   async uploadDocumentsUser(idUser,documents){
@@ -91,7 +91,7 @@ export class ManagerUsersMongoDB {
     );
       return result
   } catch (error) {
-    console.error("Error al listar productos:", error);
+
     return null;
   }
   }
@@ -100,7 +100,7 @@ export class ManagerUsersMongoDB {
       const result = await UserModelo.deleteOne({email});
       return result
     } catch (error) {
-      console.error("Error al eliminar el usuario:", error);
+
       return {
         status: 500,
         message: "Error interno al intentar eliminar el usuario.",
@@ -117,7 +117,7 @@ export class ManagerUsersMongoDB {
 
       return {emailsInactivity,result, status:200 }
     } catch (error) {
-      console.error("Error al eliminar el usuario:", error);
+     
       return {
         status: 500,
         message: "Error interno al intentar eliminar el usuario.",

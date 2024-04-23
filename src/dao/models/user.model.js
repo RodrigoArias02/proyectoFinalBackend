@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
   rol: {
     type: String,
     required: true,
-    default: 'user', 
+    default: 'usuario', 
   },
   documents: [{
     name: {

@@ -5,7 +5,7 @@ export class ManagerChatMongoDB {
             let data= await chatModelo.find();
             return data
         } catch (error) {
-            console.error("Error al listar productos:", error);
+
             return null
         }
     }
@@ -17,7 +17,7 @@ export class ManagerChatMongoDB {
             return { status: 201, message:"peticion realizada con exito", message:newMessage};
             
         } catch (error) {
-            console.error("Error al añadir el producto:", error);
+ 
             return { status: 400, error: "Error al añadir el producto a la BD" };
         } 
     }

@@ -18,9 +18,6 @@ export const initializarPassport = () => {
       async (req, username, password, done) => {
         try {
           let usuario = req.body;
-
-          console.log(usuario)
-      
        
           let {first_name,last_name,age,password} = req.body;
           if (
@@ -30,20 +27,19 @@ export const initializarPassport = () => {
             !username ||
             !password
           ) {
-        
+           
             return done(null, false);
           }
-
           let {playload,status, error}= await UserServices.getByEmail(username)
       
-        console.log(status)
+        
           if (status==200) {
-            console.log(error)
+   
             return done(null, false);
           }
           let obtenerCart=await CartServices.createCartService()
           usuario.cartId=obtenerCart.producto._id
-          console.log(usuario)
+ 
           let usuarioMongo;
 
           try {
@@ -53,8 +49,13 @@ export const initializarPassport = () => {
             usuario=new UserSave(usuario)
 
             usuarioMongo= await UserServices.createUserService(usuario)
+          
+            if(usuarioMongo.status!=200){
             
-            return done(null, usuarioMongo);
+              return done(null, false);
+            }
+            
+            return done(null, usuarioMongo.payload);
           } catch (error) {
             return done(error);
           }

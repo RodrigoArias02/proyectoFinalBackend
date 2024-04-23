@@ -4,7 +4,7 @@ export class ProductRead {
         this.description = product.description;
         this.code = Number(product.code); // Convertir a número
         this.price = Number(product.price); // Convertir a número
-        this.status = (product.status === 'active'); 
+        this.status = (product.status === 'true'); 
         this.stock = Number(product.stock); // Convertir a número
         this.category = product.category;
         this.thumbnail = [product.thumbnail];

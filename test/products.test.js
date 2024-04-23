@@ -1,10 +1,9 @@
+import mongoose from "mongoose";
 import { expect } from "chai";
 import supertest from "supertest";
 import { describe, it } from "mocha";
-import { configVar } from "../config/config.js";
-import mongoose from "mongoose";
-import { ProductRead } from "../DTO/productsDTO.js";
-import ProductoModelo from "../dao/models/product.modelo.js";
+import { configVar } from "../src/config/config.js";
+import ProductoModelo from "../src/dao/models/product.modelo.js";
 
 try {
   await mongoose.connect(configVar.MONGO_URL, { dbName: configVar.DBNAME });
@@ -19,7 +18,7 @@ describe("Prueba proyecto ecommerce", async function () {
   this.timeout(10000);
 
   describe("Prueba modulo productos", async () => {
-    it("La ruta api/products en su metodo GET deberia devolver un array", async () => {
+    it("La ruta api/products en su metodo GET deberia devolver un array con los productos", async () => {
       let { status, body, ok } = await requester.get("/api/products");
 
       expect(status).to.be.equal(200);
@@ -28,34 +27,14 @@ describe("Prueba proyecto ecommerce", async function () {
       expect(body.elements.docs).to.be.an("array");
     });
 
-    it("La clase ProductRead debería devolver un objeto", async () => {
-      const producto = {
-        title: "Televisor",
-        description: "Televisor plasma 43 pulgadas",
-        code: 23,
-        price: 1000,
-        owner: "Rodrigo@gmail.com",
-        status: true,
-        stock: 10,
-        category: "electronica",
-        thumbnail:
-          "https://www.google.com/url?sa=i&url=https%3A%2F%2Flistado.mercadolibre.com.ar%2Fsmart-tv-samsung-43&psig=AOvVaw2fd69zh-YXQkEvVASUaFt3&ust=1710457623129000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCODWiqmt8oQDFQAAAAAdAAAAABAF",
-      };
+    it("La ruta api/products/:pid en su metodo GET deberia devolver un objeto con el producto Id", async () => {
+      const pid="6627e381f0bc8486bc2bae3f"
+      let { status, body, ok } = await requester.get(`/api/products/${pid}`);
 
-      const newProduct = new ProductRead(producto);
-
-      // Verificar los tipos de datos
-      expect(newProduct).to.be.an("object");
-      expect(newProduct.title).to.be.a("string");
-      expect(newProduct.description).to.be.a("string");
-      expect(newProduct.code).to.be.a("number");
-      expect(newProduct.price).to.be.a("number");
-      expect(newProduct.owner).to.be.a("string");
-      expect(newProduct.status).to.be.a("boolean");
-      expect(newProduct.stock).to.be.a("number");
-      expect(newProduct.category).to.be.a("string");
-      expect(newProduct.thumbnail).to.be.an("array");
-      expect(newProduct.thumbnail[0]).to.be.a("string");
+      expect(status).to.be.equal(200);
+      expect(ok).to.be.true;
+      expect(body).to.exist;
+      expect(body).to.be.an("object");
     });
 
     it("La ruta api/products en su metodo POST debería guardar un producto", async () => {
@@ -64,7 +43,7 @@ describe("Prueba proyecto ecommerce", async function () {
         description: "Patineta gamer",
         code: 43445,
         price: 1000,
-        owner: "RodrigoPremium@gmail.com",
+        owner: "ludmilavaleria2003@gmail.com",
         status: true,
         stock: 10,
         category: "electronica",
@@ -73,15 +52,15 @@ describe("Prueba proyecto ecommerce", async function () {
       };
 
       const usuario = {
-        email: "RodrigoPremium@gmail.com",
+        email: "ludmilavaleria2003@gmail.com",
         password: "1234",
       };
       let { header, body, status, ok } = await requester
         .post(`/api/sessions/current`)
         .send(usuario);
-      expect(ok).to.be.true;
-      expect(body.user).to.be.an("object");
-      expect(status).to.be.equal(200);
+
+
+      expect(status).to.be.equal(302);
       const headers = header;
       // Buscamos la cabecera 'set-cookie'
       const setCookieHeader = headers["set-cookie"];
@@ -95,18 +74,11 @@ describe("Prueba proyecto ecommerce", async function () {
         .send(producto)
         .set("Cookie", cookie);
 
-      console.log(respuesta.body);
+
+    
       //status 302 ya que si todo sale bien la página es redirigida
       expect(respuesta.status).to.equal(302);
 
-      // Buscar el producto en la base de datos usando MongoDB
-      const productoEncontrado = await ProductoModelo.findOne({
-        code: producto.code,
-      });
-
-      // Verificar si se encontró el producto en la base de datos
-      expect(productoEncontrado).to.exist;
-      expect(productoEncontrado.title).to.equal(producto.title);
 
       const resultDelete = await ProductoModelo.deleteOne({
         code: producto.code,

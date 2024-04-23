@@ -10,7 +10,10 @@
     {{#if login}}
       <a href="/perfil">Perfil</a>
       <a href="/api/sessions/logout">Logout</a>
-      <a href="carts/{{login.carrito}}">Cart</a>
+      <a href="/carts/{{login.carrito}}">Cart</a>
+      {{#if validarAdmin}}
+        <a href="/admin">Admin</a>
+      {{/if}}
     {{else}}
       <a href="/login">Login</a>
       <a href="/registro">Registro</a>

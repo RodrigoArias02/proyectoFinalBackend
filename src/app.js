@@ -41,7 +41,7 @@ app.engine(
     },
   })
 );
-console.log(__dirname)
+
 app.set('view engine', 'handlebars');
 
 app.set('views', join(__dirname,'views'));

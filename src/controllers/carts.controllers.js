@@ -10,13 +10,13 @@ export class CartsControllers {
     res.setHeader("Content-Type", "text/html");
     const productId = req.params.cid; // Obtén el id del producto de req.params
     const login = req.session.usuario;
-    const { status, carrito } = await CartServices.searchCartIdService(
+    const { status, carrito, error } = await CartServices.searchCartIdService(
       productId
     );
 
     if (status != 200) {
-      
-      return { status, error: "algos salio mal" };
+      return res.status(status).json( { status, error });
+     
     }
     let objectAmount = new CartAmount(carrito);
 
@@ -79,6 +79,8 @@ export class CartsControllers {
       });
     }
     const validacion = await ProductServices.ProductoIdService(productId);
+    
+   
     if (validacion.status != 200) {
       return res.status(validacion.status).json(validacion.error);
     }
@@ -96,10 +98,12 @@ export class CartsControllers {
       quantity: 1,
     };
 
+
     const agregarProducto = await CartServices.addProductToCartService(
       cartId,
       formProduct
     );
+    
     return res.status(200).json(agregarProducto);
   }
 
@@ -238,6 +242,16 @@ export class CartsControllers {
     const cartId = req.params.cid; // Obtén el id del producto de req.params
     const email = req.session.usuario.email;
 
+    let validarProductos = await CartServices.searchCartIdService(cartId)
+
+    if(validarProductos.status!=200){
+      return res.status(validarProductos.status).json(validarProductos.error);
+    }
+
+    if(validarProductos.carrito.productos.length==0){
+      return res.status(404).json({status:404, error:"El carrito esta vacio"});
+    }
+    
     let { ticket, status, error } = await TicketServices.createTicketService(
       cartId
     );

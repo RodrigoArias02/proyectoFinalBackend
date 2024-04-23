@@ -21,5 +21,5 @@ export const configVar={
     ENTORNO:process.env.ENTORNO,
     URL:process.env.URL,
     USEREMAIL: process.env.USEREMAIL,
-    PASSEMAIL: process.env.PASS
+    PASSEMAIL: process.env.PASSEMAIL
 }

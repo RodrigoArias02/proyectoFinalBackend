@@ -13,15 +13,18 @@ export class OthersControllers {
   static async renderChat(req, res) {
     try {
       const login = req.session.usuario;
-
+      let validarAdmin
+      if(login){
+         validarAdmin=login.rol=="admin"?true:false
+      }
       let messages = await ChatServices.loadChatService();
 
       // Formatear la hora de cada mensaje antes de pasarlos a la plantilla
       messages = formatearHora(messages);
       res.setHeader("Content-Type", "text/html");
-      return res.status(200).render("chat", { messages,login });
+      return res.status(200).render("chat", { messages,login,validarAdmin });
     } catch (error) {
-      console.error("Error al cargar el chat:", error);
+      
       return res.status(500).send("Error interno del servidor");
     }
   }
@@ -30,8 +33,11 @@ export class OthersControllers {
     res.setHeader("Content-Type", "text/html");
     const { error } = req.query;
     const login = req.session.usuario;
-
-    return res.status(200).render("perfil", {login, error });
+    let validarAdmin
+    if(login){
+       validarAdmin=login.rol=="admin"?true:false
+    }
+    return res.status(200).render("perfil", {login, error,validarAdmin });
   }
 
   static async postChatSendMessage(req, res) {

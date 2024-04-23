@@ -28,10 +28,12 @@ export class SessionControllers {
       let user = new UserRead(req.user);
       req.session.usuario = user;
       const email= req.session.usuario.email
-      let resp= await UserServices.updateLastConnectionService(email);
-    
-      return res.redirect("/productos"); //produccion
-      // return res.status(200).json({ message: "Autenticación exitosa", user }); //test
+      let {success,message}= await UserServices.updateLastConnectionService(email);
+      if(success==false){
+        return res.status(404).json({ status:404 , message }); //test
+      }
+
+      return res.redirect("/perfil"); 
     } else {
       return res.status(401).json({ error: "No se pudo autenticar el usuario" });
     }
@@ -50,7 +52,7 @@ export class SessionControllers {
       const email= req.session.usuario.email
       let resp= await UserServices.updateLastConnectionService(email);
   
-      res.redirect("/productos");
+      res.redirect("/perfil");
     } else {
       return res
         .status(401)

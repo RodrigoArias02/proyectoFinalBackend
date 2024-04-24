@@ -3,7 +3,7 @@ let div = document.getElementById("productContainer")
 
 let btnEnviarId = document.getElementById("enviarId")
 
-
+let btnEnviarProductos= document.getElementById("enviarProductos")
 
 const buttons = document.querySelectorAll(".btnUpdate");
 
@@ -44,8 +44,85 @@ function renderProducts(datos){
  
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("miFormulario");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault(); // Evitar que el formulario se envíe por defecto
+
+    // Obtener los valores de los campos del formulario
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
+    const code = document.getElementById("code").value;
+    const price = document.getElementById("price").value;
+    const owner = document.getElementById("owner").value;
+    const status = document.getElementById("status").value;
+    const stock = document.getElementById("stock").value;
+    const category = document.getElementById("category").value;
+    const thumbnail = document.getElementById("thumbnail").value;
+    if (
+      title.trim() === "" ||
+      description.trim() === "" ||
+      code.trim() === "" ||
+      price.trim() === "" ||
+      owner.trim() === "" ||
+      status.trim() === "" ||
+      stock.trim() === "" ||
+      category.trim() === ""
+    ) {
+      alert("Por favor complete todos los campos");
+      // Detener el envío del formulario
+      return false;
+    }
+    const product = {
+      title,
+      description,
+      code,
+      price,
+      owner,
+      status,
+      stock,
+      category,
+      thumbnail,
+    };
+
+    try {
+      const response = await fetch(`/api/products`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+      });
+      const {error} = await response.json();
+
+      console.log(error)
+      if (response.status === 201) {
+        alert("Guardado con éxito");
+        window.location.reload();
+      } else {
+        if(error){
+          alert(error)
+        }else{
+          alert("Error al guardar. Por favor, inténtelo de nuevo.");
+        }
+       
+      }
+    } catch (error) {
+     
+      alert("Error al guardar. Por favor, inténtelo de nuevo más tarde.");
+    }
+  });
+});
+
+
 btnEnviarId.addEventListener('click', async ()=>{
   const id = document.getElementsByName('id')[0].value;
+  if (id.trim() === ""){
+    alert("Por favor complete todos los campos");
+    // Detener el envío del formulario
+    return false;
+    }
     try {
       const response = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
@@ -58,15 +135,13 @@ btnEnviarId.addEventListener('click', async ()=>{
   
     
       const data = await response.json();
+
       console.log(data)
-     if(data.status!=200){
-      alert(data)
-     }
-
-      if(data.status==201){
+      if (response.status === 201) {
         alert("eliminado con exito")
-
         window.location.reload();     
+      }else{
+        alert(data.error)
       }
     } catch (error) {
       alert("error, intente mas tarde")

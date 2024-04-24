@@ -8,7 +8,6 @@ import { STATUS_CODES, ERRORES_INTERNOS } from "../utilsErrors/typesErrors.js";
 import {errorArgumentos,errorId,errorPeticion,errorTipoValores,errrorPermisos,} from "../utilsErrors/errors.js";
 import { CustomError } from "../utilsErrors/customErrors.js";
 import { io } from "../app.js";
-import { configVar } from "../config/config.js";
 export class ProductsControllers {
   static async home(req, res, next) {
     res.setHeader("Content-Type", "text/html");
@@ -252,7 +251,6 @@ export class ProductsControllers {
     
     
       if (!req.isAuthenticated()) {
-    
         throw CustomError.createError(
           "Usuario no encontrado",
           "No se ha iniciado sesión. Debes iniciar sesión para realizar esta acción.",
@@ -279,7 +277,6 @@ export class ProductsControllers {
       const OK = validTypeData(product);
 
       if (OK != null) {
-
         throw CustomError.createError(
           "Error en tipo de datos",
           "El tipo de datos de algunos de los campos no es admitido",
@@ -309,15 +306,14 @@ export class ProductsControllers {
           STATUS_CODES.ERROR_PETICION,
           ERRORES_INTERNOS.OTROS,
           errorPeticion(estado),
-          redirect(`${configVar.URL}/ingresarProductos`)
+
         );
         
       }
 
     
-      return res.redirect(`${configVar.URL}/ingresarProductos`); 
+      return res.status(201).json(estado); 
     } catch (error) {
-   
       next(error);
     }
     next();
@@ -368,12 +364,12 @@ export class ProductsControllers {
 
   static async deleteProduct(req, res, next) {
     try {
-     
       res.setHeader("Content-Type", "application/json");
       const usuario = req.session.usuario;
       let { pid } = req.params;
-     
+    
       const idValido = mongoose.Types.ObjectId.isValid(pid);
+  
       if (!idValido) {
         throw CustomError.createError(
           "Error en el id",
@@ -383,30 +379,41 @@ export class ProductsControllers {
           errorId(idValido, pid)
         );
       }
-
-      const { producto } = await ProductServices.ProductoIdService(pid);
+      console.log(idValido)
+      const { producto,error,status } = await ProductServices.ProductoIdService(pid);
+      console.log(status)
+      if(status!=200){
+        return res.status(status).json({status,error} ); 
+      }
       if (usuario.rol=="usuario") {
-        return res.status(403).json({status:403,error:"permisos insuficientes", ruta:configVar.URL} );   
+        return res.status(403).json({status:403,error:"permisos insuficientes"} );   
       }
         if (usuario.rol=="premium" && producto.owner != usuario.email) {
-          return res.status(403).json({status:403,error:"permisos insuficientes", ruta:configVar.URL} );   
+          return res.status(403).json({status:403,error:"permisos insuficientes"} );   
         }
   
       const usuarioDelProducto=producto.owner
-      const {status,playload,error}= await UserServices.getByEmail(usuarioDelProducto)
+      const usuarioBuscado= await UserServices.getByEmail(usuarioDelProducto)
 
-      if(status!==200){
-        return res.status(status).json(status,error);
+      if(usuarioBuscado.status!==200){
+        return res.status(usuarioBuscado.status).json(usuarioBuscado);
       }
     
-      if (!playload) {
-        return res.status(500).json({ error });
+      if (!usuarioBuscado.playload) {
+        return res.status(500).json(usuarioBuscado);
       }
-      if(status==200){
-        if(playload.rol=="premium"){
+      if(usuarioBuscado.status==200){
+        if(usuarioBuscado.playload.rol=="premium"){
+
           const msg=`Se ah dado de baja el producto <b>${producto.title}</b>, con el siguiente id: ${producto._id}`
+
           const estadoEnviarEmail= await submitEmail(usuarioDelProducto, "Se elimino un producto", msg)
-      
+          if (estadoEnviarEmail.accepted.includes(usuario.email)) {
+            req.logger.warning("Warning message");
+          } else {
+            req.logger.warning(`El correo NO se envió a ${usuario.email} `);
+            return res.status(400).json({status:400, error:`El correo NO se envió a ${usuario.email} `});
+          }
         }
      
         const resultado = await ProductServices.deleteProductService(pid);
@@ -415,8 +422,7 @@ export class ProductsControllers {
           return res.status(resultado.status).json(resultado);
         }
 
-  
-        return res.status(resultado.status).json({status:200, resultado});
+        return res.status(201).json({status:201, resultado});
       }
      
     } catch (error) {

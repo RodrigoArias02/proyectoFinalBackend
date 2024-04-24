@@ -67,25 +67,7 @@ export class OthersControllers {
   }
 
 
-  static async loggerTest(req, res, next) {
-    try {
-      res.setHeader("Content-Type", "application/json");
-      req.logger.debug("Debug message");
-      req.logger.http("HTTP message");
-      req.logger.info("Info message");
-      req.logger.warning("Warning message");
-      req.logger.error("Error message");
-      req.logger.fatal("Fatal message");
 
-      return res
-        .status(200)
-        .send("Registros impresos, verifique la consola o errores.log");
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ error: "Ha ocurrido un error en el servidor" });
-    }
-  }
 
   static async renderEmail01(req, res, next) {
     try {

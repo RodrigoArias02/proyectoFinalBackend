@@ -20,13 +20,16 @@ class ProductService {
 
     if (existe != null) {
       return {
-        status: 400,
+        status: 404,
         messageError: `Ya hay un producto registrado con ese codigo: ${product.code}`,
         error: "Ah ingresado un codigo ya registrado.",
       };
     }
     let nuevoProducto = await this.dao.ingresarProductos(product);
 
+    if (!nuevoProducto) {
+      return;
+    }
     return {
       status: 201,
       message: "peticion realizada con exito",
@@ -45,14 +48,16 @@ class ProductService {
 
     const productoEncontrado = await this.dao.ProductoId(id);
 
-    if(productoEncontrado.error){
+    if (!productoEncontrado) {
+      return { status: 404, producto: null,error:`No se encontro el producto con el id ${id}` };
+    }
+    console.log("__");
+    console.log(productoEncontrado);
+    if (productoEncontrado.status == 500) {
       return { status: 500, error: "error interno en el servidor" };
     }
-    if (productoEncontrado) {
-      return { status: 200, producto: productoEncontrado };
-    } else {
-      return { status: 404, producto: null };
-    }
+
+    return { status: 200, producto: productoEncontrado};
   }
   async actualizarProductoService(id, nuevasPropiedades) {
     const existe = await this.searchCodeProductService(nuevasPropiedades.code);

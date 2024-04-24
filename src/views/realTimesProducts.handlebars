@@ -1,24 +1,23 @@
 <h1>Productos con WebSocket</h1>
 <a href="/"><h3>Volver al inicio</h3></a>
 <h2>Ingresar nuevo producto</h2>
-<form id="miFormulario" action="/api/products" method="post">
-  <input type="text" name="title" placeholder="Titulo" />
-  <input type="text" name="description" placeholder="Descripcion" />
-  <input type="number" name="code" placeholder="code" />
-  <input type="number" name="price" placeholder="price" />
-  <input type="email" hidden name="owner" value="{{email}}" />
-  <select name="status" id="">
+<form id="miFormulario">
+  <input type="text" id="title"  placeholder="Titulo" />
+  <input type="text" id="description"  placeholder="Descripcion" />
+  <input type="number" id="code"  placeholder="code" />
+  <input type="number" id="price" placeholder="price" />
+  <input type="email" id="owner"  hidden  value="{{email}}" />
+  <select name="status" id="status">
     <option value="true">true</option>
     <option value="false">false</option>
   </select>
-  <input type="number" name="stock" placeholder="stock" />
-  <select name="category" id="">
+  <input type="number" id="stock"  placeholder="stock" />
+  <select  id="category">
     <option value="Comida">Comida</option>
     <option value="Electrodomesticos">Electrodomesticos</option>
   </select>
-  <input type="text" name="thumbnail" placeholder="UrlImagenPrueba" />
-  <input type="submit" value="enviar" />
-
+  <input type="text" id="thumbnail"  placeholder="UrlImagenPrueba" />
+  <input type="submit" value="enviar" id="enviarProductos" />
 </form>
 <form action="">
   <h2>Eliminar elemento</h2>

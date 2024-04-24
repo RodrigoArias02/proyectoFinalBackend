@@ -98,7 +98,7 @@ export class ManagerProductsMongoDB {
       return nuevoProducto;
     } catch (error) {
       return {
-        status: 400,
+        status: 500,
         messageError: "Error al añadir el producto a la BD",
         error: error,
       };
@@ -112,7 +112,7 @@ export class ManagerProductsMongoDB {
 
       return productoEncontrado;
     } catch (error) {
-      return error;
+      return {status:500, error:"algo salio mal en el servidor interno!!"};
     }
   }
 

@@ -58,5 +58,4 @@ router.get("/recupero01", OthersControllers.renderEmail01)
 
 router.get("/recupero02", OthersControllers.renderEmail02)
 
-router.get("/logger", OthersControllers.loggerTest)
 export default router;

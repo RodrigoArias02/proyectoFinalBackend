@@ -43,29 +43,6 @@ function renderProducts(datos){
   div.innerHTML=html
  
 }
-//funcion que hace un fetch tipo get para pedir los productos
-async function obtenerProductos() {
-  try {
-    // Supongamos que tienes una ruta en tu servidor que maneja la lógica para obtener productos
-    const url = '/api/products';
-
-    //solicitud GET al servidor y esperar la respuesta
-    const response = await fetch(url);
-
-    // Verifica si la respuesta es exitosa
-    if (!response.ok) {
-      throw new Error(`Error al realizar la solicitud: ${response.status}`);
-    }
-
-    // Parsea la respuesta como JSON
-    const data = await response.json();
-    //retorno datos
-    return data
-
-  } catch (error) {
-    console.error('Error en la solicitud:', error);
-  }
-}
 
 btnEnviarId.addEventListener('click', async ()=>{
   const id = document.getElementsByName('id')[0].value;
@@ -81,8 +58,9 @@ btnEnviarId.addEventListener('click', async ()=>{
   
     
       const data = await response.json();
+      console.log(data)
      if(data.status!=200){
-      alert(data.error)
+      alert(data)
      }
 
       if(data.status==201){

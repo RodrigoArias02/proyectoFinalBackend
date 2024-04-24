@@ -308,8 +308,10 @@ export class ProductsControllers {
           estado.messageError,
           STATUS_CODES.ERROR_PETICION,
           ERRORES_INTERNOS.OTROS,
-          errorPeticion(estado)
+          errorPeticion(estado),
+          redirect(`${configVar.URL}/ingresarProductos`)
         );
+        
       }
 
     
@@ -370,7 +372,6 @@ export class ProductsControllers {
       res.setHeader("Content-Type", "application/json");
       const usuario = req.session.usuario;
       let { pid } = req.params;
-      let pagina=1
      
       const idValido = mongoose.Types.ObjectId.isValid(pid);
       if (!idValido) {
@@ -413,14 +414,9 @@ export class ProductsControllers {
         if(resultado.status!=201){
           return res.status(resultado.status).json(resultado);
         }
-        const productos = await ProductServices.listProductsAggregateService(null,pagina,null,usuario.email);
+
   
-        if(productos.status!=200){
-          return res.status(productos.status,).json(productos);
-        }
-  
-        io.emit("eliminado", productos.playload);
-        return res.status(resultado.status).json(resultado);
+        return res.status(resultado.status).json({status:200, resultado});
       }
      
     } catch (error) {

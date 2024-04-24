@@ -5,7 +5,7 @@ import { CartsControllers } from "../controllers/carts.controllers.js";
 import { OthersControllers } from "../controllers/other.controllers.js";
 import { UsersControllers } from "../controllers/users.controllers.js";
 
-const router = express();
+const router = express.Router();
 
 const auth=(req,res,next)=>{
   if(!req.session.usuario){

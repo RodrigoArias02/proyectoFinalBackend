@@ -78,31 +78,21 @@ btnEnviarId.addEventListener('click', async ()=>{
         },
         
       });
-
-     
-      
-      if (!response.ok) {
-  
-        if(response.status==403){
-          return window.location.href = "http://localhost:3000/ingresarProductos?error=El elemento que desea eliminar no es tuyo"
-        }
-        const data = await response.json();
-        alert(data.message)
-
-      }
   
     
       const data = await response.json();
-     
+     if(data.status!=200){
+      alert(data.error)
+     }
+
       if(data.status==201){
         alert("eliminado con exito")
-       
-        //emitimos el nuevo array al servidor
 
         window.location.reload();     
       }
     } catch (error) {
-      console.error('Error:', error);
+      alert("error, intente mas tarde")
+    
       
     }
 })

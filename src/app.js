@@ -12,12 +12,11 @@ import { configVar } from "./config/config.js";
 import { middlog } from "./utilsErrors/loggers.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import SwaggerUi from "swagger-ui-express";
-// import ProductManager from './functions/functionProducts.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// let ruta = join(__dirname, "archives", "products.json");
+
 const app = express();
 const PORT = configVar.PORT;
 const options={
@@ -29,7 +28,7 @@ const options={
       description:"Documentacion API abm users"
     }
   },
-  apis:["./docs/*yaml"]
+  apis:[join(__dirname,'docs','*yaml')]
 }
 
 app.engine(

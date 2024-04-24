@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const {error} = await response.json();
 
-      console.log(error)
+
       if (response.status === 201) {
         alert("Guardado con éxito");
         window.location.reload();
@@ -136,7 +136,7 @@ btnEnviarId.addEventListener('click', async ()=>{
     
       const data = await response.json();
 
-      console.log(data)
+   
       if (response.status === 201) {
         alert("eliminado con exito")
         window.location.reload();     

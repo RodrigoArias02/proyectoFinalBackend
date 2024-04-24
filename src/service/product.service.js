@@ -51,8 +51,7 @@ class ProductService {
     if (!productoEncontrado) {
       return { status: 404, producto: null,error:`No se encontro el producto con el id ${id}` };
     }
-    console.log("__");
-    console.log(productoEncontrado);
+
     if (productoEncontrado.status == 500) {
       return { status: 500, error: "error interno en el servidor" };
     }

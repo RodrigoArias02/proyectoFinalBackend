@@ -379,9 +379,9 @@ export class ProductsControllers {
           errorId(idValido, pid)
         );
       }
-      console.log(idValido)
+     
       const { producto,error,status } = await ProductServices.ProductoIdService(pid);
-      console.log(status)
+      
       if(status!=200){
         return res.status(status).json({status,error} ); 
       }
